@@ -1,6 +1,5 @@
 package org.fasttrackit.onlineshop.web;
 
-
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.service.ProductService;
 import org.fasttrackit.onlineshop.transfer.GetProductsRequest;
@@ -32,29 +31,30 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
-
-    @GetMapping("/(id)")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
         Product product = productService.getProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    public ResponseEntity<Page<Product>> getProducts(GetProductsRequest request, Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<Page<Product>> getProducts(
+            GetProductsRequest request, Pageable pageable) {
         Page<Product> products = productService.getProducts(request, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @PutMapping("/(id)")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid SaveProductRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable("id") Long id, @RequestBody @Valid SaveProductRequest request) {
         Product product = productService.updateProduct(id, request);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-//    @RequestMapping(method = RequestMethod.DELETE, path = "/(id)")
-    @DeleteMapping("/(id)")
+//    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

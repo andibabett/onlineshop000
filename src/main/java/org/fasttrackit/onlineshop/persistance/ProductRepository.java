@@ -13,10 +13,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByNameContainingAndQuantityGreaterThanEqual(
             String partialName, int minQuantity, Pageable pageable);
 
-    //JPQL syntax (java persistance query language)
+    // JPQL syntax (java persistence query language)
 //    @Query("SELECT product FROM Product product WHERE name LIKE '%:partialName%'")
-    //punem in `tilda` pt ca e reserved keyword
-    @Query(value = "SELECT * FROM product WHERE `name` LIKE '%?0%'", nativeQuery = true)
+    // native MySQL query
+    @Query(value = "SELECT * FROM product WHERE `name` LIKE '%?0%'",
+            nativeQuery = true)
     Page<Product> findByPartialName(String partialName, Pageable pageable);
-
 }

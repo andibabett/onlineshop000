@@ -21,5 +21,3 @@ public class DocumentationConfig {
                 .build();
     }
 }
-
-

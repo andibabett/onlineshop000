@@ -78,7 +78,7 @@ public class ProductServiceIntegrationTests {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void testDeleteProduct_whenExistingProduct_thenProductIsDeleted(){
+    public void testDeleteProduct_whenExistingProduct_thenProductIsDeleted() {
         Product product = createProduct();
 
         productService.deleteProduct(product.getId());

@@ -4,9 +4,8 @@ public class GetProductsRequest {
 
     private String partialName;
 
-    //allowing null by using wrapper class
+    // allowing null by using wrapper class
     private Integer minQuantity;
-
 
     public String getPartialName() {
         return partialName;

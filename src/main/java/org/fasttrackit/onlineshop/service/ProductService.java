@@ -1,5 +1,6 @@
 package org.fasttrackit.onlineshop.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.persistance.ProductRepository;
@@ -21,21 +22,26 @@ public class ProductService {
 
     // IoC - Inversion of Control
     private final ProductRepository productRepository;
+    private final ObjectMapper objectMapper;
 
     // Dependency injection
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ObjectMapper objectMapper) {
         this.productRepository = productRepository;
+        this.objectMapper = objectMapper;
     }
 
     public Product createProduct(SaveProductRequest request) {
         LOGGER.info("Creating product {} ", request);
-        Product product = new Product();
-        product.setDescription(request.getDescription());
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuantity());
-        product.setImageUrl(request.getImageUrl());
+        Product product = objectMapper.convertValue(request, Product.class);
+
+        // statements below would created the same object as the objectMapper did above
+//        Product product = new Product();
+//        product.setDescription(request.getDescription());
+//        product.setName(request.getName());
+//        product.setPrice(request.getPrice());
+//        product.setQuantity(request.getQuantity());
+//        product.setImageUrl(request.getImageUrl());
 
         return productRepository.save(product);
     }
@@ -58,17 +64,17 @@ public class ProductService {
                         "Product " + id + " does not exist."));
     }
 
-    public Page<Product> getProducts(GetProductsRequest request, Pageable pageable){
+    public Page<Product> getProducts(GetProductsRequest request, Pageable pageable) {
         LOGGER.info("Retrieving products: {}", request);
-
-        if (request != null && request.getPartialName() != null && request.getMinQuantity() != null){
-            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(request.getPartialName(),
-                    request.getMinQuantity(), pageable);
-        }else if (request != null && request.getPartialName() != null){
+        if (request != null && request.getPartialName() != null &&
+                request.getMinQuantity() != null) {
+            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(
+                    request.getPartialName(), request.getMinQuantity(), pageable);
+        } else if (request != null && request.getPartialName() != null) {
             return productRepository.findByNameContaining(
                     request.getPartialName(), pageable);
-        }else{
-            return productRepository.findByNameContaining(request.getPartialName(),pageable);
+        } else {
+            return productRepository.findAll(pageable);
         }
     }
 
